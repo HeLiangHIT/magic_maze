@@ -15,7 +15,7 @@ def sub_path(rpath):
 
 
 def read_file(path):
-    with open(path, 'r') as f:
+    with open(path, 'r', encoding='utf-8') as f:
         return f.read()
     return ''
 
@@ -58,7 +58,8 @@ setup(
     keywords = 'maze pyqt',
 
     description = 'maze game developed by python',
-    long_description = 'maze game developed by python', # read_file(sub_path('README.md'))
+    long_description_content_type = "text/markdown",
+    long_description = read_file(sub_path('README.md')),
 
     packages = list_packages(),
     py_modules = list_modules(),
@@ -66,7 +67,8 @@ setup(
     entry_points = {'console_scripts': [
         'maze = main:main', # cmd entry points
     ]},
-    data_files = [('', ['README.md', 'LICENSE']),
+    include_package_data = True, 
+    data_files = [('', ['README.md', 'LICENSE']), # try package_data instead
                   ('script', find_files(sub_path("script"))),
                   ('demo', find_files(sub_path("demo"))),
                   ('doc', find_files(sub_path("doc"))),

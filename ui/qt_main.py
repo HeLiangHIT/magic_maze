@@ -12,6 +12,7 @@ import os
 import sys
 import time
 from functools import reduce
+from math import ceil
 import copy
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt, QtTest
 from PyQt5.QtWidgets import QApplication
@@ -140,11 +141,8 @@ class MazeMain(QtWidgets.QWidget):
 
         v_layout_right = QtWidgets.QVBoxLayout()
         title = QtWidgets.QLabel(self)
-        font = QtGui.QFont()
-        font.setFamily("Lucida Calligraphy")
-        font.setPointSize(28)
-        title.setFont(font)
         title.setAlignment(QtCore.Qt.AlignCenter)
+        title.setStyleSheet("QLabel{font-size:30pt;font-style:bold;text-align:center;}")
         title.setText("Maze")
         v_layout_right.addWidget(title)
 
@@ -253,7 +251,7 @@ class MazeMain(QtWidgets.QWidget):
         self.run_btn.setText("走迷宫")
         v_layout_handle.addWidget(self.run_btn)
         notice_lbl = QtWidgets.QLabel(self)
-        notice_lbl.setStyleSheet("QLabel{font-size:6pt;font-family:宋体;font-style:italic;text-align:center;}")
+        notice_lbl.setStyleSheet("QLabel{font-size:6pt;font-style:italic;text-align:center;}")
         notice_lbl.setText("左键绘制/右键清除/触摸翻转")
         notice_lbl.setAlignment(QtCore.Qt.AlignCenter)
         v_layout_handle.addWidget(notice_lbl)
@@ -339,12 +337,12 @@ class MazeWidget(QtWidgets.QWidget):
                 color = self.ColorMap[self.m.data[n][m]] if self.m.data[n][m] in self.ColorMap.keys() else QtCore.Qt.white
                 painter.setPen(color)
                 painter.setBrush(color)
-                painter.drawRect(m * self.col_len, n * self.row_len, self.col_len, self.row_len)
+                painter.drawRect(ceil(m * self.col_len), ceil(n * self.row_len), ceil(self.col_len), ceil(self.row_len))
                 if self.m.data[n][m] == Point.Start:
-                    painter.drawImage(QtCore.QRect(m * self.col_len, n * self.row_len, self.col_len, self.row_len), 
+                    painter.drawImage(QtCore.QRect(ceil(m * self.col_len), ceil(n * self.row_len), ceil(self.col_len), ceil(self.row_len)), 
                         QtGui.QImage(os.path.sep.join([_script_dir, "resources", "run.png"])))
                 if self.m.data[n][m] == Point.End:
-                    painter.drawImage(QtCore.QRect(m * self.col_len, n * self.row_len, self.col_len, self.row_len), 
+                    painter.drawImage(QtCore.QRect(ceil(m * self.col_len), ceil(n * self.row_len), ceil(self.col_len), ceil(self.row_len)), 
                         QtGui.QImage(os.path.sep.join([_script_dir, "resources", "flag.png"])))
 
     def _draw_diff(self, painter):
@@ -353,15 +351,15 @@ class MazeWidget(QtWidgets.QWidget):
             color = self.ColorMap[v] if v in self.ColorMap.keys() else QtCore.Qt.white
             painter.setPen(color)
             painter.setBrush(color)
-            painter.drawRect(m * self.col_len, n * self.row_len, self.col_len, self.row_len)
+            painter.drawRect(ceil(m * self.col_len), ceil(n * self.row_len), ceil(self.col_len), ceil(self.row_len))
 
     def _draw_answer(self, painter):
         # 绘制答案
         for n, m in self.answer[1:-1]: # 起止点有专门的标记，不用重复绘制
             painter.setPen(QtCore.Qt.yellow)
             painter.setBrush(QtCore.Qt.red)
-            painter.drawEllipse(m * self.col_len + self.col_len / 4, n * self.row_len + self.row_len / 4, 
-                                self.col_len / 2, self.row_len / 2)
+            painter.drawEllipse(ceil(m * self.col_len + self.col_len / 4), ceil(n * self.row_len + self.row_len / 4), 
+                                ceil(self.col_len / 2), ceil(self.row_len / 2))
 
     def event(self, e):
         if e.type() not in (QtGui.QTouchEvent.TouchBegin, QtGui.QTouchEvent.TouchUpdate, QtGui.QTouchEvent.TouchEnd):
