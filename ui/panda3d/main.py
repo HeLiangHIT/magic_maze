@@ -363,14 +363,18 @@ class MyApp(ShowBase):
 
         light2 = AmbientLight("light2")
         light2.setColor((0.2, 0.2, 0.2, 0.2))
-        self.render.setLight(self.render.attachNewNode(light2))
+        node2 = self.render.attachNewNode(light2)
+        self.render.setLight(node2)
+        self.lgts.append(node2)
 
         light3 = DirectionalLight("light3")
         light3.setDirection(LVector3(-1, -1, -1))
         light3.setColor((0.2, 0.2, 0.2, 1))
         light3.setSpecularColor((1, 1, 1, 1))
         light3.setShadowCaster(True)
-        self.render.setLight(render.attachNewNode(light3))
+        node3 = self.render.attachNewNode(light3)
+        self.render.setLight(node3)
+        self.lgts.append(node3)
 
     def display_help(self):
         title = OnscreenText(text="Magic Maze",
