@@ -65,7 +65,7 @@ setup(
     py_modules = list_modules(),
     install_requires = read_file(sub_path('requirement.txt')).split('\n'),
     entry_points = {'console_scripts': [
-        'maze = main:main', # cmd entry points
+        'maze = main:cmd_main', # cmd entry points
     ]},
     include_package_data = True, 
     data_files = [('', ['README.md', 'LICENSE']), # try package_data instead

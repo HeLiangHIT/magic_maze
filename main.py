@@ -20,6 +20,10 @@ def main(dimension:str = "2d"):
         main()
 
 
+def cmd_main():
+    import fire
+    fire.Fire(main)
+
 if __name__ == '__main__':
     import fire
     fire.Fire(main)
