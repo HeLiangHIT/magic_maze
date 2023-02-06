@@ -9,10 +9,10 @@ mkdir -p "${DOC_DIR}"
 cd "${PRJ_DIR}"
 python setup.py sdist bdist_wheel --universal # 源码和whl文件
 twine check dist/* # python setup.py check -r -s
-if [[ $? -ne 0 ]]; then 
+if [[ ${ret} -ne 0 ]]; then 
     echo -e E$(date +'%m%d %H:%M:%S.%6N' -u) "\033[31m" "run check error" "\033[0m"
     exit 1
 fi
-twine upload dist/*
+twine upload dist/* # config ~/.pypirc file
 
 rm -rf build/ dist/ magic_maze.egg-info/

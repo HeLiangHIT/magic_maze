@@ -72,7 +72,8 @@ setup(
                   ('script', find_files(sub_path("script"))),
                   ('demo', find_files(sub_path("demo"))),
                   ('doc', find_files(sub_path("doc"))),
-                  ('ui/resources', find_files(sub_path("ui/resources"))),],
+                  ('ui/pyqt/resources', find_files(sub_path("ui/pyqt/resources"))),
+                  ('ui/panda3d/models', find_files(sub_path("ui/panda3d/models"))),],
 
     zip_safe = False, # avoid error when uninstall on windows
 

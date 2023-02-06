@@ -4,8 +4,22 @@
 # @Author  : HeLiang (helianghit@foxmail.com)
 # @Link    : https://github.com/HeLiangHIT
 
-import os
-from ui.qt_main import main
+
+def main(dimension:str = "2d"):
+    ''' magic maze game in 2d and 3d dimension
+    Args:
+        dimension: Optional: "2d"/"3d"
+    Return:
+        None
+    '''
+    if dimension == "3d":
+        from ui.panda3d.main import main
+        main()
+    else:
+        from ui.pyqt.main import main
+        main()
+
 
 if __name__ == '__main__':
-    main()
+    import fire
+    fire.Fire(main)
