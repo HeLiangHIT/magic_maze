@@ -1,0 +1,328 @@
+Help on package algorithm:
+
+NAME
+    algorithm
+
+PACKAGE CONTENTS
+    generate
+    map
+    search
+
+FILE
+    /mnt/d/repo/1.web/magic_maze/algorithm/__init__.py
+
+
+Help on module algorithm.map in algorithm:
+
+NAME
+    algorithm.map
+
+DESCRIPTION
+    迷宫算法涉及的基本数据结构，包括Point和Map，使用示例:
+    >>> m = Map(); print(m) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    10X10:
+    C C C C C C C C C C
+        ...
+    >>> m.data[1][1] = Point.Wall
+    >>> m.data = Point.Wall # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+        ...
+    AttributeError: can't set attribute 'data'
+    >>> print(m) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    10X10:
+    C C C C C C C C C C
+    C W C C C C C C C C
+        ...
+    >>> m.save("./empty.map")
+    >>> m1 = Map.load("./empty.map")
+    >>> print(m1) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    10X10:
+    C C C C C C C C C C
+    C W C C C C C C C C
+        ...
+    >>> os.remove("./empty.map")
+    >>> m1.data[0][0] = Point.Start;m1.data[9][9] = Point.End;print(Map().diff(m1))
+    [(0, 0, <Point.Start: 3>), (1, 1, <Point.Wall: 2>), (9, 9, <Point.End: 4>)]
+    >>> print(m1.start, m1.end)
+    [(0, 0)] [(9, 9)]
+    >>> txt = m1.to_json(); print(txt)
+    {"data": [[3, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 2, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 4]]}
+    >>> m2, isok = Map().from_json(txt); print(m2) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    10X10:
+    S C C C C C C C C C
+    C W C C C C C C C C
+    ...
+
+CLASSES
+    builtins.object
+        Map
+    enum.IntEnum(builtins.int, enum.Enum)
+        Point
+    
+    class Map(builtins.object)
+     |  Map(size=(10, 10), default=<Point.Chan: 1>, *args, **kwargs)
+     |  
+     |  地图对象: 支持创建、修改成员、保存、加载
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(self, size=(10, 10), default=<Point.Chan: 1>, *args, **kwargs)
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |  
+     |  __str__(self)
+     |      Return str(self).
+     |  
+     |  diff(self, other)
+     |  
+     |  from_data(self, data)
+     |  
+     |  save(self, path)
+     |  
+     |  to_json(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Static methods defined here:
+     |  
+     |  from_json(txt)
+     |  
+     |  load(path)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Readonly properties defined here:
+     |  
+     |  data
+     |  
+     |  end
+     |  
+     |  size
+     |  
+     |  start
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+    
+    class Point(enum.IntEnum)
+     |  Point(value, names=None, *, module=None, qualname=None, type=None, start=1)
+     |  
+     |  An enumeration.
+     |  
+     |  Method resolution order:
+     |      Point
+     |      enum.IntEnum
+     |      builtins.int
+     |      enum.Enum
+     |      builtins.object
+     |  
+     |  Data and other attributes defined here:
+     |  
+     |  Chan = <Point.Chan: 1>
+     |  
+     |  End = <Point.End: 4>
+     |  
+     |  NxtVisit = <Point.NxtVisit: 6>
+     |  
+     |  Start = <Point.Start: 3>
+     |  
+     |  Visited = <Point.Visited: 5>
+     |  
+     |  Wall = <Point.Wall: 2>
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from enum.Enum:
+     |  
+     |  name
+     |      The name of the Enum member.
+     |  
+     |  value
+     |      The value of the Enum member.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Readonly properties inherited from enum.EnumMeta:
+     |  
+     |  __members__
+     |      Returns a mapping of member name->value.
+     |      
+     |      This mapping lists all enum members, including aliases. Note that this
+     |      is a read-only view of the internal mapping.
+
+FILE
+    /mnt/d/repo/1.web/magic_maze/algorithm/map.py
+
+
+Help on module algorithm.search in algorithm:
+
+NAME
+    algorithm.search
+
+DESCRIPTION
+    路径搜索，提供bfs(最短路)和dfs两种方法，入参相同，使用示例如下:
+    >>> m = Map((3, 3)); m.data[1][1] = Point.Wall; m.data[0][0] = Point.Start; m.data[1][2] = Point.End
+    >>> paths = bfs(m.data, [(0, 0),], [(1, 2),], callback=lambda m: print('\n'.join(["-----", ] + [' '.join([p.name[0] for p in row]) for row in m]))) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    -----
+    V C C
+    C W E
+    C C C
+    -----
+    V N C
+    V W E
+    C C C
+    ...
+    V W N
+    V V C
+    -----
+    V V V
+    V W V
+    V V N
+    >>> print(paths) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    [[(0, 0), (0, 1), (0, 2), (1, 2)]]
+    
+    >>> paths = dfs(m.data, [(0, 0),], [(1, 2),], callback=lambda m: print('\n'.join(["-----", ] + [' '.join([p.name[0] for p in row]) for row in m]))) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    -----
+    V C C
+    C W E
+    C C C
+    -----
+    V C C
+    V W E
+    ...
+    V V V
+    -----
+    V C C
+    V W V
+    V V V
+    >>> print(paths) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    [[(0, 0), (1, 0), (2, 0), (2, 1), (2, 2), (1, 2)]]
+    >>> paths = a_star(m.data, [(0, 0),], [(1, 2),], callback=lambda m: print('\n'.join(["-----", ] + [' '.join([p.name[0] for p in row]) for row in m]))) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    -----
+    V C C
+    C W E
+    C C C
+    -----
+    V V C
+    ...
+    V V V
+    N W V
+    C C C
+    >>> print(paths) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    [[(0, 0), (0, 1), (0, 2), (1, 2)]]
+
+FUNCTIONS
+    a_star(mdata, srcs, targets, max_steps=50000, max_paths=1, callback=None)
+        多点对多点的A*最短路算法 -> BFS 算法改进为以距离优先出
+        NOTE: mdata 为二维数组，入参 srcs 和 targets 需为数组实际下标； callback 为每次迭代计算的回调，用于实时在视图中刷新访问情况
+    
+    bfs(mdata, srcs, targets, max_steps=20000, max_paths=1, callback=None)
+        多点对多点的BFS最短路算法
+        NOTE: mdata 为二维数组，入参 srcs 和 targets 需为数组实际下标； callback 为每次迭代计算的回调，用于实时在视图中刷新访问情况
+    
+    dfs(mdata, srcs, targets, max_steps=50000, max_paths=1, callback=None)
+        多点对多点的DFS最短路算法
+        NOTE: mdata 为二维数组，入参 srcs 和 targets 需为数组实际下标； callback 为每次迭代计算的回调，用于实时在视图中刷新访问情况
+
+FILE
+    /mnt/d/repo/1.web/magic_maze/algorithm/search.py
+
+
+Help on module algorithm.generate in algorithm:
+
+NAME
+    algorithm.generate
+
+DESCRIPTION
+    迷宫生成，提供dfsg(深度优先)和primg(随机广度)两种方法，入参相同，使用示例如下:
+    >>> callback = lambda m: print('\n'.join(["-----", ] + [' '.join([p.name[0] for p in row]) for row in m]))
+    >>> m = dfsg((3, 3), [(0, 0),], [(2, 2),], callback=callback) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    -----
+    C W W
+    ...
+    ...C
+    >>> print(m) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    3X3:
+    S...
+    ...
+    ...E
+    >>> m = primg((3, 3), [(0, 0),], [(2, 2),], callback=callback) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    -----
+    C W W
+    ...
+    ...C
+    >>> print(m) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    3X3:
+    S...
+    ...
+    ...E
+    >>> m = dfsg((6, 6), [(0, 0),], [(5, 5),], callback=callback) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    -----
+    C...
+    ...
+    ...W
+    >>> print(m) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    6X6:
+    S...
+    ...
+    ...E
+    >>> m = primg((60, 60), [(0, 0),], [(45, 51),]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    >>> print(m) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    60X60:
+    S...
+    ...
+    W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W
+
+FUNCTIONS
+    dfsg(size, starts, ends, callback=None)
+        深度优先迷宫生成算法:
+        算法流程:
+        1.将起点作为当前迷宫单元并标记为已访问
+        2.当还存在未标记的迷宫单元，进行循环
+            1.如果当前迷宫单元有未被访问过的相邻的迷宫单元
+                1.随机选择一个未访问的相邻迷宫单元
+                2.将当前迷宫单元入栈
+                3.移除当前迷宫单元与相邻迷宫单元的墙
+                4.标记相邻迷宫单元并用它作为当前迷宫单元
+            2.如果当前迷宫单元不存在未访问的相邻迷宫单元，并且栈不空
+                1.栈顶的迷宫单元出栈
+                2.令其成为当前迷宫单元
+        这种算法生成的迷宫会有比较明显的主路
+    
+    kruskalg(size, starts, ends, callback=None)
+        随机Kruskal算法 (并查集)
+        1.创建所有墙的列表（除了四边），并且创建所有单元的集合，每个集合中只包含一个单元。
+        2.随机从墙的列表中选取一个，取该墙两边分隔的两个单元
+            1.两个单元属于不同的集合，则将去除当前的墙，把分隔的两个单元连同当前墙三个点作为一个单元集合；并将当前选中的墙移出列表
+            2.如果属于同一个集合，则直接将当前选中的墙移出列表
+        3.不断重复第 2 步，直到所有墙都检测过
+        该算法同样不会出现明显的主路，岔路也比较多
+        Pyhthon 实现可以参考(代码太难看): https://blog.csdn.net/cj12345657582255/article/details/115605195
+    
+    primg(size, starts, ends, callback=None)
+        随机Prim算法生成迷宫 - 更像随机广度优先算法
+        1.让迷宫全是墙
+        2.选一个单元格作为迷宫的通路，然后把它的邻墙放入列表
+        3.当列表里还有墙时
+            1.从列表里随机选一个墙，如果这面墙分隔的两个单元格只有一个单元格被访问过
+                1.那就从列表里移除这面墙，即把墙打通，让未访问的单元格成为迷宫的通路
+                2.把这个格子的墙加入列表
+            2.如果墙两面的单元格都已经被访问过，那就从列表里移除这面墙
+        改进: 如果把墙放到列表中，比较复杂，维基里面提到了改进策略。可以维护一个迷宫单元格的列表，而不是边的列表。在这个迷宫单元格列表里面存放了未访问的单元格，我们在单元格列表中随机挑选一个单元格，如果这个单元格有多面墙联系着已存在的迷宫通路，我们就随机选择一面墙打通。
+        相对于深度优先的算法，Prim随机算法不是优先选择最近选中的单元格，而是随机的从所有的列表中的单元格进行选择，新加入的单元格和旧加入的单元格同样概率会被选择，新加入的单元格没有有优先权。因此其分支更多，生成的迷宫更复杂，难度更大，也更自然。
+    
+    reduce(...)
+        reduce(function, iterable[, initial]) -> value
+        
+        Apply a function of two arguments cumulatively to the items of a sequence
+        or iterable, from left to right, so as to reduce the iterable to a single
+        value.  For example, reduce(lambda x, y: x+y, [1, 2, 3, 4, 5]) calculates
+        ((((1+2)+3)+4)+5).  If initial is present, it is placed before the items
+        of the iterable in the calculation, and serves as a default when the
+        iterable is empty.
+
+FILE
+    /mnt/d/repo/1.web/magic_maze/algorithm/generate.py
+
+
