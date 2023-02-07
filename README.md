@@ -43,3 +43,10 @@ magic_maze
 ├── script # 单元测试、帮助文档生成等自动化脚本
 └── ui # pyqt/panda3d 的 UI 主程序
 ```
+
+
+欢迎扫码关注作者，获取更多好玩的程序哦～
+
+<img src="./doc/owner.jpg" width = "300" height = "300" alt="关注作者" align="center" />
+
+
