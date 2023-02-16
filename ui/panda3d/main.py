@@ -10,6 +10,7 @@ import time
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import OnscreenText
 from direct.gui.DirectSlider import DirectSlider
+from direct.gui.DirectDialog import OkDialog
 from direct.interval.IntervalGlobal import Sequence, Parallel
 from panda3d.core import GeomVertexFormat, GeomVertexData, Geom, GeomTriangles, GeomVertexWriter, GeomNode, CardMaker
 from panda3d.core import Texture, TextureStage, TextNode, WindowProperties
@@ -205,6 +206,7 @@ class MyApp(ShowBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setBackgroundColor(0, 0, 0)
+
         props = WindowProperties( )
         props.setTitle('Magic Maze')
         # props.setIconFilename(win2unix_path(os.path.sep.join([_script_dir, "models", "maze.png"])))
@@ -314,9 +316,12 @@ class MyApp(ShowBase):
         self.accept("arrow_right", lambda : self.panda.right(True, self._check_conflict).start())
 
     def _check_conflict(self, pos):
-        if round(pos.getX()) >= len(self.maze_map.data) or round(pos.getY()) >= len(self.maze_map.data[0]):
+        row, col = round(pos.getX()), round(pos.getY())
+        if row >= self.size[0] or col >= self.size[1] or row < 0 or col < 0:
             return True
-        if self.maze_map.data[round(pos.getX())][round(pos.getY())] != Point.Wall:
+        if self.maze_map.data[row][col] == Point.End:
+            dl = OkDialog(text = "Congratulations, you won!", command=lambda x: dl.destroy() or self.generate_maze())
+        if self.maze_map.data[row][col] != Point.Wall:
             return True
         return False
 
