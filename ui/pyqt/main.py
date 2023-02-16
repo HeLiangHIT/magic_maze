@@ -306,13 +306,14 @@ class MazeWidget(QtWidgets.QWidget):
         self.repaint() # 强制刷新迷宫
 
     def update_maze(self, maze_map):
-        # 增量刷新迷宫显示区域
+        # 增量刷新迷宫显示区域 - 提升刷新性能
         if self.m is None or self.m.size != maze_map.size:
             self.new_maze(maze_map) # 首次设置
         else:
             self.diff = self.m.diff(maze_map)
             self.m = copy.deepcopy(maze_map)
             self.pix = self.grab(QtCore.QRect(0, 0, self.width(), self.height())) # 避免仅显示绘制部分，作为二级缓存显示
+            self.answer = []
             self.repaint()
 
     def get_map(self):
@@ -346,7 +347,7 @@ class MazeWidget(QtWidgets.QWidget):
                         QtGui.QImage(os.path.sep.join([_script_dir, "resources", "flag.png"])))
 
     def _draw_diff(self, painter):
-        # 绘制增量
+        # 绘制增量 - 提升刷新性能
         for n, m, v in self.diff:
             color = self.ColorMap[v] if v in self.ColorMap.keys() else QtCore.Qt.white
             painter.setPen(color)
