@@ -17,7 +17,8 @@
 
 + [源码](https://github.com/HeLiangHIT/magic_maze)安装: `git clone https://github.com/HeLiangHIT/magic_maze.git && cd magic_maze && python setup.py install`
 + pip源安装: `pip install magic_maze` 源地址 https://pypi.org/project/magic-maze/
-+ ~~下载可执行文件: 到 https://github.com/HeLiangHIT/magic_maze/releases 下载可执行文件~~
++ 下载可执行文件: 到 https://github.com/HeLiangHIT/magic_maze/releases 下载可执行文件
+    * 三维视图的迷宫: 下载的 exe 二进制 >> 右键 >> 创建快捷方式 >> 修改快捷方式文件的目标(在后面追加 `-d 3d`) >> 双击打开快捷方式
 + 查看帮助使用: 源码 `python main.py --help`/ 二进制 `maze --help`
     * 支持自动生成迷宫、寻找最佳路径，且动态显示迷宫生成和搜索过程
     * 支持手动绘制迷宫(鼠标左键绘制通道、右键绘制墙体)、走迷宫(鼠标左键走、右键取消)
@@ -48,5 +49,3 @@ magic_maze
 欢迎扫码关注作者，获取更多好玩的程序哦～
 
 <img src="./doc/owner.jpg" width = "300" height = "300" alt="关注作者" align="center" />
-
-
